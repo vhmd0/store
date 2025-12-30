@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Store.API/Store.API.csproj" />
+  <Project Path="Store.Data/Store.Data.csproj" />
+  <Project Path="Store.Repository/Store.Repository.csproj" />
+  <Project Path="Store.Service/Store.Service.csproj" />
+</Solution>
