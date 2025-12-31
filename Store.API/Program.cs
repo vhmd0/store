@@ -3,6 +3,7 @@ using Store.API.Helper;
 using Store.Data.Context;
 using Store.Repository.Interfaces;
 using Store.Repository.Repositories;
+using Store.Service.Services.Product;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<StoreDbContext>(options => options.UseNpgsql(connectionString));
 
-builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
