@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Store.API.Helper;
 using Store.Data.Context;
+using Store.Repository.Interfaces;
+using Store.Repository.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,10 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<StoreDbContext>(options => options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-
+// 
 var app = builder.Build();
 
 await ApplySeeding.ApplySeedingAsync(app, connectionString);
@@ -28,4 +32,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapGet("/", () => "Hello Nando");
 app.Run();
