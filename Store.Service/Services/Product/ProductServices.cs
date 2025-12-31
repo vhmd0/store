@@ -16,8 +16,13 @@ namespace Store.Service.Services.Product
             _mapper = mapper;
         }
 
-        public async Task<ProductDetailsDto> GetProductByIdAsync(int id)
+        public async Task<ProductDetailsDto> GetProductByIdAsync(int? id)
         {
+            if (id is null)
+            {
+                throw new ArgumentNullException(nameof(id));
+            }
+
             var products = await _unitOfWork.Repository<Data.Entities.Product, int>().GetIdAsync(id);
             return _mapper.Map<ProductDetailsDto>(products);
         }

@@ -4,7 +4,7 @@ namespace Store.Service.Services.Product
 {
     public interface IProductServices
     {
-        Task<ProductDetailsDto> GetProductByIdAsync(int id);
+        Task<ProductDetailsDto> GetProductByIdAsync(int? id);
 
         Task<IReadOnlyList<ProductDetailsDto>> GetAllProductAsync();
 

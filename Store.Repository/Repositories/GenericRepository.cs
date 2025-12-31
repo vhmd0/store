@@ -17,7 +17,7 @@ public class GenericRepository<TEntity, TKey>
     }
 
 
-    public async Task<TEntity> GetIdAsync(TKey id)
+    public async Task<TEntity> GetIdAsync(int? id)
         => await _context.Set<TEntity>().FindAsync(id);
 
     public async Task<IReadOnlyList<TEntity>> GetAllAsync()

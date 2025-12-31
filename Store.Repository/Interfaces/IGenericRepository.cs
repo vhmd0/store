@@ -4,7 +4,7 @@ namespace Store.Repository.Interfaces;
 
 public interface IGenericRepository<TEntity, in TKey> where TEntity : BaseEntity<TKey>
 {
-    Task<TEntity> GetIdAsync(TKey id);
+    Task<TEntity> GetIdAsync(int? id);
 
     // ReadOnly List
     Task<IReadOnlyList<TEntity>> GetAllAsync();
