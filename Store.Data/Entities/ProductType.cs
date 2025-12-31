@@ -4,5 +4,5 @@ namespace Store.Data.Entities;
 
 public class ProductType : BaseEntity<int>
 {
-    [Required] [StringLength(100)] public string Name { get; set; } = string.Empty;
+    [StringLength(100)] public string Name { get; set; }
 }

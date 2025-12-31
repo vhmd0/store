@@ -16,15 +16,9 @@ public class UnitOfWork
         _context = context;
     }
 
-    public IGenericRepository<TEntity, TKey>
-        Repository<TEntity, TKey>() where TEntity
+    public IGenericRepository<TEntity, TKey> Repository<TEntity, TKey>() where TEntity
         : BaseEntity<TKey>
     {
-        if (_repositories is null)
-        {
-            _repositories = new Hashtable();
-        }
-
         var key = typeof(TEntity).Name;
 
         if (!_repositories.ContainsKey(key))
@@ -35,7 +29,7 @@ public class UnitOfWork
             _repositories.Add(key, repositoryInstance);
         }
 
-        return (IGenericRepository<TEntity, TKey>)_repositories[key];
+        return (IGenericRepository<TEntity, TKey>)_repositories[key]!;
     }
 
     public async Task<int> CompleteAsync()
