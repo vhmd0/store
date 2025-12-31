@@ -12,9 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<StoreDbContext>(options => options.UseNpgsql(connectionString));
-
-builder.Services.AddAutoMapper(option => { option.AddMaps(typeof(ProductProfile)); });
-
+builder.Services.AddAutoMapper(typeof(ProductProfile));
 builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
