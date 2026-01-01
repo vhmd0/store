@@ -14,8 +14,6 @@ public class ProductController : ControllerBase
     {
         _services = services;
     }
-
-
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<ProductDetailsDto>>> GetAllProducts()
     {

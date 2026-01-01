@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using Store.Data.Context;
+﻿using Store.Data.Context;
 using Store.Data.Entities;
 using Store.Repository.Interfaces;
+using System.Collections;
 
 namespace Store.Repository.Repositories;
 
