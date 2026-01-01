@@ -18,19 +18,16 @@ public class GenericRepository<TEntity, TKey>
     }
 
     public async Task<TEntity?> GetByIdAsync(TKey id)
-    {
-        return await _dbSet.FindAsync(id);
-    }
+       => await _dbSet.FindAsync(id);
+
 
     public async Task<IReadOnlyList<TEntity>> GetAllAsync()
-    {
-        return await _dbSet.ToListAsync();
-    }
+     => await _dbSet.ToListAsync();
+
 
     public async Task CreateAsync(TEntity entity)
-    {
-        await _dbSet.AddAsync(entity);
-    }
+     => await _dbSet.AddAsync(entity);
+
 
     public void Update(TEntity entity)
     {
