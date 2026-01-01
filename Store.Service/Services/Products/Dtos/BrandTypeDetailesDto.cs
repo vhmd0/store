@@ -1,4 +1,4 @@
-﻿namespace Store.Service.Services.Product.Dto
+﻿namespace Store.Service.Services.Products.Dtos
 {
     public class BrandTypeDto
     {

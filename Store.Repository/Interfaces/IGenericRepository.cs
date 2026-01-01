@@ -2,15 +2,13 @@
 
 namespace Store.Repository.Interfaces;
 
-public interface IGenericRepository<TEntity, in TKey> where TEntity : BaseEntity<TKey>
+public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
 {
-    Task<TEntity> GetIdAsync(int? id);
+    Task<TEntity?> GetByIdAsync(TKey id);
 
-    // ReadOnly List
     Task<IReadOnlyList<TEntity>> GetAllAsync();
 
-    //CRUD
     Task CreateAsync(TEntity entity);
-    void UpdateAsync(TEntity entity);
-    void DeleteAsync(TEntity entity);
+    void Update(TEntity entity);
+    void Delete(TEntity entity);
 }

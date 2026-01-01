@@ -1,7 +1,6 @@
-﻿using Store.Service.Services.Product.Dto;
-using Store.Service.Services.Product.Dtos;
+﻿using Store.Service.Services.Products.Dtos;
 
-namespace Store.Service.Services.Product
+namespace Store.Service.Services.Products
 {
     public interface IProductServices
     {

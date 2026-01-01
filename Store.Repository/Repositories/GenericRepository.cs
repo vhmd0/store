@@ -6,29 +6,39 @@ using Store.Repository.Interfaces;
 namespace Store.Repository.Repositories;
 
 public class GenericRepository<TEntity, TKey>
-    : IGenericRepository<TEntity, TKey> where TEntity
-    : BaseEntity<TKey>
+    : IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TKey>
 {
-    public readonly StoreDbContext _context;
+    private readonly StoreDbContext _context;
+    private readonly DbSet<TEntity> _dbSet;
 
     public GenericRepository(StoreDbContext context)
     {
         _context = context;
+        _dbSet = _context.Set<TEntity>();
     }
 
-
-    public async Task<TEntity> GetIdAsync(int? id)
-        => await _context.Set<TEntity>().FindAsync(id);
+    public async Task<TEntity?> GetByIdAsync(TKey id)
+    {
+        return await _dbSet.FindAsync(id);
+    }
 
     public async Task<IReadOnlyList<TEntity>> GetAllAsync()
-        => await _context.Set<TEntity>().ToListAsync();
+    {
+        return await _dbSet.ToListAsync();
+    }
 
     public async Task CreateAsync(TEntity entity)
-        => await _context.Set<TEntity>().AddAsync(entity);
+    {
+        await _dbSet.AddAsync(entity);
+    }
 
-    public void UpdateAsync(TEntity entity)
-        => _context.Set<TEntity>().Update(entity);
+    public void Update(TEntity entity)
+    {
+        _dbSet.Update(entity);
+    }
 
-    public void DeleteAsync(TEntity entity)
-        => _context.Set<TEntity>().Remove(entity);
+    public void Delete(TEntity entity)
+    {
+        _dbSet.Remove(entity);
+    }
 }
