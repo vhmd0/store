@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Store.Data.Entities;
 using Store.Repository.Interfaces;
-using Store.Service.Services.Products.Dtos;
+using Store.Repository.Specification.Products;
+using Store.Service.Dtos.Products;
 
 namespace Store.Service.Services.Products
 {
@@ -18,14 +19,16 @@ namespace Store.Service.Services.Products
 
         public async Task<ProductDetailsDto?> GetProductByIdAsync(int? id)
         {
-            if (!id.HasValue)
+            if (id is null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
+            var spc = new ProductsWithSpecification(id.Value);
+
             var product = await _unitOfWork
                 .Repository<Product, int>()
-                .GetByIdAsync(id.Value);
+                .GetAllWithSpecificationAsync(spc);
 
             return _mapper.Map<ProductDetailsDto>(product);
         }

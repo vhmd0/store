@@ -1,6 +1,8 @@
-﻿namespace Store.Data.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Store.Data.Entities;
 
 public class ProductBrand : BaseEntity<int>
 {
-    public string Name { get; set; }
+    [Required] [StringLength(100)] public string Name { get; set; } = null!;
 }

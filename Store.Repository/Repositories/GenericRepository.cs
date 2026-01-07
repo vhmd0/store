@@ -2,6 +2,8 @@
 using Store.Data.Context;
 using Store.Data.Entities;
 using Store.Repository.Interfaces;
+using Store.Repository.Specification;
+using Store.Repository.Specification.Products;
 
 namespace Store.Repository.Repositories;
 
@@ -18,15 +20,31 @@ public class GenericRepository<TEntity, TKey>
     }
 
     public async Task<TEntity?> GetByIdAsync(TKey id)
-       => await _dbSet.FindAsync(id);
+    {
+        return await _dbSet.FindAsync(id);
+    }
 
+    public async Task<TEntity?> GetDataWithSpecificationAsync(ISpecification<TKey> id)
+    {
+        return await SpecificationEvaluator<TEntity, TKey>.GetQuery(_dbSet, (ISpecification<TEntity>)id)
+            .FirstOrDefaultAsync();
+    }
 
     public async Task<IReadOnlyList<TEntity>> GetAllAsync()
-     => await _dbSet.ToListAsync();
+    {
+        return await _dbSet.ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<TEntity>> GetAllWithSpecificationAsync(ISpecification<TEntity> spec)
+    {
+        return await SpecificationEvaluator<TEntity, TKey>.GetQuery(_dbSet, spec).ToListAsync();
+    }
 
 
     public async Task CreateAsync(TEntity entity)
-     => await _dbSet.AddAsync(entity);
+    {
+        await _dbSet.AddAsync(entity);
+    }
 
 
     public void Update(TEntity entity)

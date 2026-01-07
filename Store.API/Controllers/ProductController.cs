@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Store.Service.Dtos.Products;
 using Store.Service.Services.Products;
-using Store.Service.Services.Products.Dtos;
 
 namespace Store.API.Controllers;
 
@@ -14,6 +14,7 @@ public class ProductController : ControllerBase
     {
         _services = services;
     }
+
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<ProductDetailsDto>>> GetAllProducts()
     {
@@ -41,8 +42,7 @@ public class ProductController : ControllerBase
 
         var product = await _services.GetProductByIdAsync(id);
 
-        if (product is null)
-            return NotFound();
+        if (product == null) return NotFound();
 
         return Ok(product);
     }

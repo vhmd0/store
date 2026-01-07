@@ -2,9 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Store.Data.Entities;
 
-namespace Store.Service.Services.Products.Dtos;
+namespace Store.Service.Dtos.Products;
 
-public class ProductUrlResolver : IValueResolver<Product, ProductDetailsDto, string>
+public class ProductUrlResolver : IValueResolver<Product, ProductDetailsDto, string?>
 {
     public ProductUrlResolver(IConfiguration configuration)
     {
@@ -13,7 +13,7 @@ public class ProductUrlResolver : IValueResolver<Product, ProductDetailsDto, str
 
     public IConfiguration Configuration { get; }
 
-    string? IValueResolver<Product, ProductDetailsDto, string>.Resolve(Product source, ProductDetailsDto destination, string destMember, ResolutionContext context)
+    public string? Resolve(Product source, ProductDetailsDto destination, string? destMember, ResolutionContext context)
     {
         if (!string.IsNullOrEmpty(source.PictureUrl))
 

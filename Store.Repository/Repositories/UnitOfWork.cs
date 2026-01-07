@@ -1,14 +1,14 @@
-﻿using Store.Data.Context;
+﻿using System.Collections;
+using Store.Data.Context;
 using Store.Data.Entities;
 using Store.Repository.Interfaces;
-using System.Collections;
 
 namespace Store.Repository.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {
     private readonly StoreDbContext _context;
-    private Hashtable _repositories;
+    private Hashtable? _repositories;
 
     public UnitOfWork(StoreDbContext context) => _context = context;
 

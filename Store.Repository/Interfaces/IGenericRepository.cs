@@ -1,4 +1,5 @@
 ﻿using Store.Data.Entities;
+using Store.Repository.Specification;
 
 namespace Store.Repository.Interfaces;
 
@@ -6,7 +7,9 @@ public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TK
 {
     Task<TEntity?> GetByIdAsync(TKey id);
 
+    Task<TEntity?> GetDataWithSpecificationAsync(ISpecification<TKey> id);
     Task<IReadOnlyList<TEntity>> GetAllAsync();
+    Task<IReadOnlyList<TEntity>> GetAllWithSpecificationAsync(ISpecification<TEntity> spec);
 
     Task CreateAsync(TEntity entity);
     void Update(TEntity entity);
