@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Store.Service.Dtos.Products;
 using Store.Service.Services.Products;
+using Store.Service.Services.Products.Dtos;
 
 namespace Store.API.Controllers;
 

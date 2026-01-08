@@ -24,9 +24,9 @@ public class GenericRepository<TEntity, TKey>
         return await _dbSet.FindAsync(id);
     }
 
-    public async Task<TEntity?> GetDataWithSpecificationAsync(ISpecification<TKey> id)
+    public async Task<TEntity?> GetDataWithSpecificationAsync(ISpecification<TEntity> spec)
     {
-        return await SpecificationEvaluator<TEntity, TKey>.GetQuery(_dbSet, (ISpecification<TEntity>)id)
+        return await SpecificationEvaluator<TEntity, TKey>.GetQuery(_dbSet, spec)
             .FirstOrDefaultAsync();
     }
 

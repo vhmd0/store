@@ -1,4 +1,4 @@
-﻿using Store.Service.Dtos.Products;
+﻿using Store.Service.Services.Products.Dtos;
 
 namespace Store.Service.Services.Products
 {

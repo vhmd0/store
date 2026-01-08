@@ -1,23 +1,18 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Scalar.AspNetCore;
 using Store.API.Helper;
 using Store.Data.Context;
 using Store.Repository.Interfaces;
 using Store.Repository.Repositories;
-using Store.Service.Dtos.Products;
 using Store.Service.Services.Products;
+using Store.Service.Services.Products.Dtos;
 using Store.Service.Services.S3;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
-builder.Services.AddDbContext<StoreDbContext>(options =>
-{
-    options.UseNpgsql(connectionString);
-    options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
-});
+builder.Services.AddDbContext<StoreDbContext>(options => { options.UseSqlServer(connectionString); });
 builder.Services.AddAutoMapper(typeof(ProductProfile));
 builder.Services.AddScoped<IProductServices, ProductServices>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

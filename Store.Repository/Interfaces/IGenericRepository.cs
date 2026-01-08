@@ -7,7 +7,7 @@ public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TK
 {
     Task<TEntity?> GetByIdAsync(TKey id);
 
-    Task<TEntity?> GetDataWithSpecificationAsync(ISpecification<TKey> id);
+    Task<TEntity?> GetDataWithSpecificationAsync(ISpecification<TEntity> spec);
     Task<IReadOnlyList<TEntity>> GetAllAsync();
     Task<IReadOnlyList<TEntity>> GetAllWithSpecificationAsync(ISpecification<TEntity> spec);
 

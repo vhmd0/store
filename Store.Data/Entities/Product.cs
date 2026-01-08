@@ -4,10 +4,12 @@ namespace Store.Data.Entities;
 
 public class Product : BaseEntity<int>
 {
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public string? Name { get; set; }
 
-    public string PictureUrl { get; set; } = string.Empty;
+    public string? Description { get; set; }
+
+
+    public string? PictureUrl { get; set; }
     // ForeignKey For Brand
 
     public ProductBrand? Brand { get; set; }
@@ -18,5 +20,5 @@ public class Product : BaseEntity<int>
     public ProductType? Type { get; set; }
     public int TypeId { get; set; }
 
-    [DataType(DataType.Currency)] public decimal Price { get; set; }
+    [DataType("decimal(18,2)")] public decimal Price { get; set; }
 }

@@ -2,7 +2,7 @@
 using Store.Data.Entities;
 using Store.Repository.Interfaces;
 using Store.Repository.Specification.Products;
-using Store.Service.Dtos.Products;
+using Store.Service.Services.Products.Dtos;
 
 namespace Store.Service.Services.Products
 {
@@ -28,14 +28,15 @@ namespace Store.Service.Services.Products
 
             var product = await _unitOfWork
                 .Repository<Product, int>()
-                .GetAllWithSpecificationAsync(spc);
+                .GetDataWithSpecificationAsync(spc);
 
             return _mapper.Map<ProductDetailsDto>(product);
         }
 
         public async Task<IReadOnlyList<ProductDetailsDto>> GetAllProductAsync()
         {
-            var products = await _unitOfWork.Repository<Product, int>().GetAllAsync();
+            var spc = new ProductsWithSpecification(new ProductSpecification());
+            var products = await _unitOfWork.Repository<Product, int>().GetAllWithSpecificationAsync(spc);
             return _mapper.Map<IReadOnlyList<ProductDetailsDto>>(products);
         }
 
