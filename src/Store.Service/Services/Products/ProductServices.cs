@@ -38,17 +38,14 @@ public class ProductServices : IProductServices
 
         var allProducts = await _unitOfWork.Repository<Product, int>().GetAllWithSpecificationAsync(spcs);
 
-        var paginatedProducts = allProducts
-            .Skip((input.PageIndex - 1) * input.PageSize)
-            .Take(input.PageSize)
-            .ToList();
+        var mappedProducts = _mapper.Map<IReadOnlyList<ProductDetailsDto>>(allProducts);
 
-        var mappedProducts = _mapper.Map<IReadOnlyList<ProductDetailsDto>>(paginatedProducts);
+        var count = await _unitOfWork.Repository<Product, int>().CountAsync(spcs);
 
         return new PaginatedResultDto<IReadOnlyList<ProductDetailsDto>>(
             input.PageIndex,
             input.PageSize,
-            allProducts.Count,
+            count,
             mappedProducts);
     }
     public async Task<IReadOnlyList<BrandTypeDto>> GetAllTypeAsync()

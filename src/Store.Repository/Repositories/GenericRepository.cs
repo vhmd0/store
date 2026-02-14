@@ -36,6 +36,9 @@ public class GenericRepository<TEntity, TKey>
     public async Task<TEntity> GetByIdSpecificationAsync(ISpecification<TEntity> spec)
         => await query(spec).FirstOrDefaultAsync();
 
+    public async Task<int> CountAsync(ISpecification<TEntity> spec)
+        => await query(spec).CountAsync();
+
     public async Task CreateAsync(TEntity entity)
         => await _dbSet.AddAsync(entity);
 

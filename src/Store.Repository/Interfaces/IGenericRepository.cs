@@ -10,6 +10,7 @@ public interface IGenericRepository<TEntity, TKey> where TEntity : BaseEntity<TK
     Task<TEntity?> GetDataWithSpecificationAsync(ISpecification<TEntity> spec);
     Task<IReadOnlyList<TEntity>> GetAllAsync();
     Task<IReadOnlyList<TEntity>> GetAllWithSpecificationAsync(ISpecification<TEntity> spec);
+    Task<int> CountAsync(ISpecification<TEntity> spec);
 
     Task CreateAsync(TEntity entity);
     void Update(TEntity entity);

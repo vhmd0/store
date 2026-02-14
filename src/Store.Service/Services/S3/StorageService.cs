@@ -71,25 +71,25 @@ public class StorageService : IStorageService
     public async Task<string> UploadCategoryBannerAsync(int categoryId, Stream imageStream, string fileName)
     {
         var key = $"categories/{categoryId}/{fileName}";
-        await UploadFileAsync("ecommerce-bucket", key, imageStream);
-        return $"{_options.Endpoint}/ecommerce-bucket/{key}";
+        await UploadFileAsync(_options.BucketName, key, imageStream);
+        return $"{_options.Endpoint}/{_options.BucketName}/{key}";
     }
 
     public async Task<string> UploadUserProfileImageAsync(int userId, Stream imageStream, string fileName)
     {
         var key = $"users/{userId}/{fileName}";
-        await UploadFileAsync("ecommerce-bucket", key, imageStream);
-        return $"{_options.Endpoint}/ecommerce-bucket/{key}";
+        await UploadFileAsync(_options.BucketName, key, imageStream);
+        return $"{_options.Endpoint}/{_options.BucketName}/{key}";
     }
 
     public Task<string> GetProductImageUrlAsync(int productId, string fileName)
     {
-        return Task.FromResult($"{_options.Endpoint}/ecommerce-bucket/products/{productId}/{fileName}");
+        return Task.FromResult($"{_options.Endpoint}/{_options.BucketName}/products/{productId}/{fileName}");
     }
 
     public Task<string> GetCategoryBannerUrlAsync(int categoryId, string fileName)
     {
-        return Task.FromResult($"{_options.Endpoint}/ecommerce-bucket/categories/{categoryId}/{fileName}");
+        return Task.FromResult($"{_options.Endpoint}/{_options.BucketName}/categories/{categoryId}/{fileName}");
     }
 
     public Task<string> GetUserProfileImageUrlAsync(int userId, string fileName)

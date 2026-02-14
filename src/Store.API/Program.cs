@@ -6,12 +6,13 @@ using Store.Repository.Repositories;
 using Store.Service.Services.Products;
 using Store.Service.Services.Products.Dtos;
 using Store.Service.Services.S3;
+using Store.Service.Middlewares;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("PostgreSQL");
-var s3 = builder.Configuration.GetSection("Supabase:S3");
+builder.Services.Configure<SupabaseS3Options>(builder.Configuration.GetSection("Supabase:S3"));
 
 builder.Services.AddDbContext<StoreDbContext>(options =>
 {
@@ -27,7 +28,7 @@ builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddControllers();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// builder.Services.AddOpenApi();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -36,12 +37,14 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 await ApplySeeding.ApplySeedingAsync(app, connectionString);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // app.MapOpenApi();
     app.UseSwagger();
     // Enable the Swagger UI middleware
     app.UseSwaggerUI(options =>

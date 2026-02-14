@@ -15,7 +15,8 @@ public class StoreContextSeed
         {
             if (!context.ProductBrands.Any())
             {
-                var brandData = await File.ReadAllTextAsync(@"../Store.Repository/SeedData/brands.json");
+                var basePath = Path.GetDirectoryName(typeof(StoreContextSeed).Assembly.Location);
+                var brandData = await File.ReadAllTextAsync(Path.Combine(basePath!, "SeedData", "brands.json"));
 
                 var brands = JsonSerializer.Deserialize<List<ProductBrand>>(brandData);
 

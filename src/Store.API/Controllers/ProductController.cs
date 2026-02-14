@@ -29,10 +29,10 @@ public class ProductController : ControllerBase
 
 
 
-    [HttpGet]
-    public async Task<ActionResult<ProductDetailsDto>> GetProductById([FromQuery] int? id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ProductDetailsDto>> GetProductById(int id)
     {
-        if (id == 0) return BadRequest();
+        if (id <= 0) return BadRequest();
 
         var product = await _services.GetProductByIdAsync(id);
 

@@ -8,6 +8,7 @@ public class ProductsWithSpecification : BaseSpecification<Product>
         : base(product =>
             (!spec.BrandId.HasValue || product.BrandId == spec.BrandId.Value)
             && (!spec.TypeId.HasValue || product.TypeId == spec.TypeId.Value)
+            && (string.IsNullOrEmpty(spec.Search) || (product.Name != null && product.Name.ToLower().Contains(spec.Search.ToLower())) || (product.Description != null && product.Description.ToLower().Contains(spec.Search.ToLower())))
         )
     {
         AddInclude(p => p.Brand!);
