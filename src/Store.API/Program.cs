@@ -1,0 +1,62 @@
+using Microsoft.EntityFrameworkCore;
+using Store.API.Helper;
+using Store.Data.Context;
+using Store.Repository.Interfaces;
+using Store.Repository.Repositories;
+using Store.Service.Services.Products;
+using Store.Service.Services.Products.Dtos;
+using Store.Service.Services.S3;
+using Npgsql;
+
+var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("PostgreSQL");
+var s3 = builder.Configuration.GetSection("Supabase:S3");
+
+builder.Services.AddDbContext<StoreDbContext>(options =>
+{
+    options.UseNpgsql(connectionString);
+});
+builder.Services.AddAutoMapper(typeof(ProductProfile));
+builder.Services.AddScoped<IProductServices, ProductServices>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+//builder.Services.AddScoped<IRedisServices, RedisServices>();
+builder.Services.AddScoped<IStorageService, StorageService>();
+
+builder.Services.AddControllers();
+
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+
+builder.Services.AddEndpointsApiExplorer();
+
+// Add the Swagger generation service
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+await ApplySeeding.ApplySeedingAsync(app, connectionString);
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwagger();
+    // Enable the Swagger UI middleware
+    app.UseSwaggerUI(options =>
+    {
+        // Specify the endpoint for the OpenAPI JSON document
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+    });
+}
+
+app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

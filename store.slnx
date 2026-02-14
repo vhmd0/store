@@ -1,6 +1,8 @@
 <Solution>
-  <Project Path="Store.API/Store.API.csproj" />
-  <Project Path="Store.Data/Store.Data.csproj" />
-  <Project Path="Store.Repository/Store.Repository.csproj" />
-  <Project Path="Store.Service/Store.Service.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/Store.API/Store.API.csproj" />
+    <Project Path="src/Store.Data/Store.Data.csproj" />
+    <Project Path="src/Store.Repository/Store.Repository.csproj" />
+    <Project Path="src/Store.Service/Store.Service.csproj" />
+  </Folder>
 </Solution>
