@@ -3,11 +3,10 @@ using Store.API.Helper;
 using Store.Data.Context;
 using Store.Repository.Interfaces;
 using Store.Repository.Repositories;
+using Store.Service.Middlewares;
 using Store.Service.Services.Products;
 using Store.Service.Services.Products.Dtos;
 using Store.Service.Services.S3;
-using Store.Service.Middlewares;
-using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
