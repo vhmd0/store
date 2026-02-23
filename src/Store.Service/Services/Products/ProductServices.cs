@@ -8,19 +8,9 @@ using Store.Service.Services.Products.Dtos;
 
 namespace Store.Service.Services.Products;
 
-public class ProductServices : IProductServices
+public class ProductServices(IUnitOfWork unitOfWork, IMapper mapper, HybridCache hybridCache)
+    : IProductServices
 {
-    private readonly IMapper _mapper;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly HybridCache _hybridCache;
-
-    public ProductServices(IUnitOfWork unitOfWork, IMapper mapper, HybridCache hybridCache)
-    {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _hybridCache = hybridCache;
-    }
-
     public async Task<ProductDetailsDto?> GetProductByIdAsync(int? id)
     {
         if (id is null)
@@ -28,31 +18,33 @@ public class ProductServices : IProductServices
 
         var cacheKey = $"product_{id}";
 
-        return await _hybridCache.GetOrCreateAsync(cacheKey, async token =>
+
+        return await hybridCache.GetOrCreateAsync(cacheKey, async token =>
         {
             var spc = new ProductsWithSpecification(id.Value);
-
-            var product = await _unitOfWork
+            var product = await unitOfWork
                 .Repository<Product, int>()
                 .GetDataWithSpecificationAsync(spc);
 
-            return _mapper.Map<ProductDetailsDto>(product);
+            return mapper.Map<ProductDetailsDto>(product);
         });
     }
 
-    public async Task<PaginatedResultDto<IReadOnlyList<ProductDetailsDto>>> GetAllProductAsync(ProductSpecification input)
-    {
-        var cacheKey = $"products_{input.PageIndex}_{input.PageSize}_{input.Search}_{input.TypeId}_{input.BrandId}_{input.Sort}";
 
-        return await _hybridCache.GetOrCreateAsync(cacheKey, async token =>
+    public async Task<PaginatedResultDto<IReadOnlyList<ProductDetailsDto>>> GetAllProductAsync(
+        ProductSpecification input)
+    {
+        var cacheKey =
+            $"products:page:{input.PageIndex}:size:{input.PageSize}:search:{input.Search}:type:{input.TypeId}:brand:{input.BrandId}:sort:{input.Sort}";
+        return await hybridCache.GetOrCreateAsync(cacheKey, async token =>
         {
             var spcs = new ProductsWithSpecification(input);
 
-            var allProducts = await _unitOfWork.Repository<Product, int>().GetAllWithSpecificationAsync(spcs);
+            var allProducts = await unitOfWork.Repository<Product, int>().GetAllWithSpecificationAsync(spcs);
 
-            var mappedProducts = _mapper.Map<IReadOnlyList<ProductDetailsDto>>(allProducts);
+            var mappedProducts = mapper.Map<IReadOnlyList<ProductDetailsDto>>(allProducts);
 
-            var count = await _unitOfWork.Repository<Product, int>().CountAsync(spcs);
+            var count = await unitOfWork.Repository<Product, int>().CountAsync(spcs);
 
             return new PaginatedResultDto<IReadOnlyList<ProductDetailsDto>>(
                 input.PageIndex,
@@ -61,23 +53,22 @@ public class ProductServices : IProductServices
                 mappedProducts);
         });
     }
+
     public async Task<IReadOnlyList<BrandTypeDto>> GetAllTypeAsync()
     {
-        return await _hybridCache.GetOrCreateAsync("all_types", async token =>
+        return await hybridCache.GetOrCreateAsync("all_types", async token =>
         {
-            var types = await _unitOfWork.Repository<ProductType, int>().GetAllAsync();
-            return _mapper.Map<IReadOnlyList<BrandTypeDto>>(types);
+            var types = await unitOfWork.Repository<ProductType, int>().GetAllAsync();
+            return mapper.Map<IReadOnlyList<BrandTypeDto>>(types);
         });
     }
 
     public async Task<IReadOnlyList<BrandTypeDto>> GetAllBrandsAsync()
     {
-        return await _hybridCache.GetOrCreateAsync("all_brands", async token =>
+        return await hybridCache.GetOrCreateAsync("all_brands", async token =>
         {
-            var brands = await _unitOfWork.Repository<ProductBrand, int>().GetAllAsync();
-            return _mapper.Map<IReadOnlyList<BrandTypeDto>>(brands);
+            var brands = await unitOfWork.Repository<ProductBrand, int>().GetAllAsync();
+            return mapper.Map<IReadOnlyList<BrandTypeDto>>(brands);
         });
     }
-
-
 }

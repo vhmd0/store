@@ -2,7 +2,7 @@
 
 public interface ICacheServices
 {
-    Task SetCacheResponseAsync(string key, object response, TimeSpan expiration);
+    Task SetCacheAsync<T>(string key, T value, TimeSpan expiration);
 
-    Task<string?> GetCacheResponseAsync(string key);
+    Task<T?> GetCacheAsync<T>(string key);
 }

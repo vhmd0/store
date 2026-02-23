@@ -10,16 +10,17 @@ public class CacheServices : ICacheServices
     {
         _hybridCache = hybridCache;
     }
-    public async Task SetCacheResponseAsync(string key, object response, TimeSpan expiration)
+
+    public async Task SetCacheAsync<T>(string key, T value, TimeSpan expiration)
     {
-        if (response is null)
+        if (value is null)
             return;
 
-        await _hybridCache.SetAsync(key, response, new HybridCacheEntryOptions { Expiration = expiration });
+        await _hybridCache.SetAsync(key, value, new HybridCacheEntryOptions { Expiration = expiration });
     }
 
-    public async Task<string?> GetCacheResponseAsync(string key)
+    public async Task<T?> GetCacheAsync<T>(string key)
     {
-        return await _hybridCache.GetOrCreateAsync<string?>(key, _ => ValueTask.FromResult<string?>(null));
+        return await _hybridCache.GetOrCreateAsync<T?>(key, _ => ValueTask.FromResult(default(T?)));
     }
 }

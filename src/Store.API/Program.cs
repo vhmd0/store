@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Hybrid;
 using StackExchange.Redis;
 using Store.API.Helper;
 using Store.Data.Context;
@@ -14,22 +13,16 @@ using Store.Service.Services.S3;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("PostgreSQL");
-var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
-
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis") ??
+                            throw new InvalidOperationException("Connection string 'Redis' not found.");
 builder.Services.Configure<SupabaseS3Options>(builder.Configuration.GetSection("Supabase:S3"));
 
-builder.Services.AddDbContext<StoreDbContext>(options =>
-{
-    options.UseNpgsql(connectionString);
-});
+builder.Services.AddDbContext<StoreDbContext>(options => { options.UseNpgsql(connectionString); });
 
 builder.Services.AddSingleton<IConnectionMultiplexer>(opt =>
     ConnectionMultiplexer.Connect(redisConnectionString!));
 
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = redisConnectionString;
-});
+builder.Services.AddStackExchangeRedisCache(options => { options.Configuration = redisConnectionString; });
 
 builder.Services.AddHybridCache();
 builder.Services.AddAutoMapper(typeof(ProductProfile));
