@@ -18,6 +18,8 @@
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="AWSSDK.Core" Version="4.0.3.7" />
     <PackageReference Include="AWSSDK.S3" Version="4.0.16.3" />
+    <PackageReference Include="Community.Microsoft.Extensions.Caching.PostgreSql" Version="6.0.2" />
+    <PackageReference Include="StackExchange.Redis" Version="2.11.3" />
     <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.5.0" />
   </ItemGroup>
 </Project>
