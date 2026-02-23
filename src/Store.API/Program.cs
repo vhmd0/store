@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Hybrid;
+using StackExchange.Redis;
 using Store.API.Helper;
 using Store.Data.Context;
 using Store.Repository.Interfaces;
 using Store.Repository.Repositories;
 using Store.Service.Middlewares;
+using Store.Service.Services.CacheServices;
 using Store.Service.Services.Products;
 using Store.Service.Services.Products.Dtos;
 using Store.Service.Services.S3;
@@ -11,17 +14,29 @@ using Store.Service.Services.S3;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("PostgreSQL");
+var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+
 builder.Services.Configure<SupabaseS3Options>(builder.Configuration.GetSection("Supabase:S3"));
 
 builder.Services.AddDbContext<StoreDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(opt =>
+    ConnectionMultiplexer.Connect(redisConnectionString!));
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = redisConnectionString;
+});
+
+builder.Services.AddHybridCache();
 builder.Services.AddAutoMapper(typeof(ProductProfile));
 builder.Services.AddScoped<IProductServices, ProductServices>();
+builder.Services.AddScoped<ICacheServices, CacheServices>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-//builder.Services.AddScoped<IRedisServices, RedisServices>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 
 builder.Services.AddControllers();
