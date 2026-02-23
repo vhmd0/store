@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Microsoft.Extensions.Caching.Hybrid;
 using Store.Data.Entities;
 using Store.Repository.Interfaces;
@@ -14,6 +14,12 @@ public class ProductServices : IProductServices
     private readonly IUnitOfWork _unitOfWork;
     private readonly HybridCache _hybridCache;
 
+    /// <summary>
+    /// Initializes a new instance of ProductServices with the required dependencies.
+    /// </summary>
+    /// <param name="unitOfWork">Unit of work providing repository access and transactional operations.</param>
+    /// <param name="mapper">Object-object mapper used to convert entities to DTOs.</param>
+    /// <param name="hybridCache">Caching provider used to store and retrieve product-related data.</param>
     public ProductServices(IUnitOfWork unitOfWork, IMapper mapper, HybridCache hybridCache)
     {
         _unitOfWork = unitOfWork;
@@ -21,6 +27,11 @@ public class ProductServices : IProductServices
         _hybridCache = hybridCache;
     }
 
+    /// <summary>
+    /// Retrieves the product details for the specified product id, using a cached value when available.
+    /// </summary>
+    /// <param name="id">The product identifier; if null, the method returns null.</param>
+    /// <returns>A <see cref="ProductDetailsDto"/> for the specified product, or null if the id is null or the product is not found.</returns>
     public async Task<ProductDetailsDto?> GetProductByIdAsync(int? id)
     {
         if (id is null)
@@ -40,6 +51,11 @@ public class ProductServices : IProductServices
         });
     }
 
+    /// <summary>
+    /// Retrieves a paginated list of products that match the provided specification.
+    /// </summary>
+    /// <param name="input">Specification containing paging, filtering, and sorting criteria.</param>
+    /// <returns>A PaginatedResultDto containing the page index, page size, total item count, and the mapped list of ProductDetailsDto.</returns>
     public async Task<PaginatedResultDto<IReadOnlyList<ProductDetailsDto>>> GetAllProductAsync(ProductSpecification input)
     {
         var cacheKey = $"products_{input.PageIndex}_{input.PageSize}_{input.Search}_{input.TypeId}_{input.BrandId}_{input.Sort}";
@@ -61,6 +77,10 @@ public class ProductServices : IProductServices
                 mappedProducts);
         });
     }
+    /// <summary>
+    /// Retrieve all product types from cache or the data store.
+    /// </summary>
+    /// <returns>A read-only list of BrandTypeDto representing all product types.</returns>
     public async Task<IReadOnlyList<BrandTypeDto>> GetAllTypeAsync()
     {
         return await _hybridCache.GetOrCreateAsync("all_types", async token =>
@@ -70,6 +90,10 @@ public class ProductServices : IProductServices
         });
     }
 
+    /// <summary>
+    /// Retrieves all product brands mapped to BrandTypeDto.
+    /// </summary>
+    /// <returns>A read-only list of BrandTypeDto representing all product brands.</returns>
     public async Task<IReadOnlyList<BrandTypeDto>> GetAllBrandsAsync()
     {
         return await _hybridCache.GetOrCreateAsync("all_brands", async token =>
